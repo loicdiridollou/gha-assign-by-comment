@@ -1,0 +1,9 @@
+name: Assign reviewer by comment
+on: [issue_comment, pull_request_review]
+
+jobs:
+  assign_review_by_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: assign_review_by_comment
+        run: echo ${GITHUB_REF}; echo ${GITHUB_ENV}
