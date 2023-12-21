@@ -25,7 +25,7 @@ jobs:
 
           resp = requests.get(dd['comment']['issue_url'],
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'})
-          current_assignees = [user['login'] for user in resp['assignees']]
+          current_assignees = [user['login'] for user in resp.json()['assignees']]
 
           if dd['comment']['body'].startswith('/take'):
             current_assignes.append(dd['comment']['user']['login'])
