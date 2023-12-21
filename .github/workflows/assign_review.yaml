@@ -33,6 +33,7 @@ jobs:
           if dd['comment']['body'].startswith('/assign'):
             assignees = dd['comment']['body'].split(' ')[1:]
             data = json.dumps({"assignees": assignees})
+            print(data)
             resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
