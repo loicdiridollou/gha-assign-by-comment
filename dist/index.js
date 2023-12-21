@@ -2750,14 +2750,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const wait_1 = __nccwpck_require__(259);
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
+const fs_1 = __importDefault(__nccwpck_require__(147));
 async function run() {
     try {
         const ms = core.getInput("milliseconds");
@@ -2766,7 +2766,7 @@ async function run() {
         // Log the current timestamp, wait, then log the new timestamp
         core.debug(new Date().toTimeString());
         const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
-        console.log(GITHUB_EVENT_PATH);
+        console.log(JSON.parse(fs_1.default.readFileSync(GITHUB_EVENT_PATH, "utf-8")));
         await (0, wait_1.wait)(parseInt(ms, 10));
         core.debug(new Date().toTimeString());
         // Set outputs for other workflow steps to use

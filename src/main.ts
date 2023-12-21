@@ -1,10 +1,7 @@
 import * as core from "@actions/core";
 import { wait } from "./wait";
+import fs from "fs";
 
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
 export async function run(): Promise<void> {
   try {
     const ms: string = core.getInput("milliseconds");
@@ -15,7 +12,8 @@ export async function run(): Promise<void> {
     // Log the current timestamp, wait, then log the new timestamp
     core.debug(new Date().toTimeString());
     const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
-    console.log(GITHUB_EVENT_PATH);
+    console.log(JSON.parse(fs.readFileSync(GITHUB_EVENT_PATH!, "utf-8")));
+
     await wait(parseInt(ms, 10));
     core.debug(new Date().toTimeString());
 
