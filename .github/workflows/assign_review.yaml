@@ -37,7 +37,7 @@ jobs:
 
           if dd['comment']['body'].startswith('/assign'):
             current_assignees.extend([user.replace('@', '') for user in dd['comment']['body'].split(' ')[1:]])
-            data = json.dumps({"assignees": assignees})
+            data = json.dumps({"assignees": current_assignees})
             resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
@@ -47,7 +47,7 @@ jobs:
             for user in [user.replace('@', '') for user in dd['comment']['body'].split(' ')[1:]]:
               if user in current_assignees:
                 current_assignees.remove(user)
-            data = json.dumps({"assignees": assignees})
+            data = json.dumps({"assignees": current_assignees})
             resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
