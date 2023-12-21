@@ -10,10 +10,15 @@ jobs:
         run: |
           import yaml
           import os
+          import requests
+          import json
           from pathlib import Path
 
           with Path(os.environ['GITHUB_EVENT_PATH']).open() as file:
             dd = yaml.full_load(file)
 
-          print(dd['comment']['issue_url'])
-          print(dd)
+          if dd['comment']['body'].startswith('/take'):
+            data = json.dumps({"assignees": [dd['comment']['user']['login']]})
+            requests.post(dd['comment']['issue_url'], 
+                          headers={'Authorization': f'Bearer {os.environ['GITHUB_TOKEN']}'},
+                          data=data)
