@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: assign_review_by_comment
         permissions:
-          issues: read|write
+          issues: write
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: python
