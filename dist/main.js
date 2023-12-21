@@ -37,6 +37,8 @@ async function run() {
         core.debug(`Waiting ${ms} milliseconds ...`);
         // Log the current timestamp, wait, then log the new timestamp
         core.debug(new Date().toTimeString());
+        const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
+        console.log(GITHUB_EVENT_PATH);
         await (0, wait_1.wait)(parseInt(ms, 10));
         core.debug(new Date().toTimeString());
         // Set outputs for other workflow steps to use

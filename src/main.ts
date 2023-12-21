@@ -14,6 +14,8 @@ export async function run(): Promise<void> {
 
     // Log the current timestamp, wait, then log the new timestamp
     core.debug(new Date().toTimeString());
+    const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
+    console.log(GITHUB_EVENT_PATH);
     await wait(parseInt(ms, 10));
     core.debug(new Date().toTimeString());
 
