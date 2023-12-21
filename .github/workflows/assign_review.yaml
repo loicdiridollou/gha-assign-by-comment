@@ -21,6 +21,7 @@ jobs:
 
           if dd['comment']['body'].startswith('/take'):
             data = json.dumps({"assignees": [dd['comment']['user']['login']]})
-            requests.post(dd['comment']['issue_url'], 
+            resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
+            print(resp.json())
