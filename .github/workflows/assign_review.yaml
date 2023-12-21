@@ -23,18 +23,32 @@ jobs:
           with Path(os.environ['GITHUB_EVENT_PATH']).open() as file:
             dd = yaml.full_load(file)
 
+          resp = requests.get(dd['comment']['issue_url'],
+                          headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'})
+          current_assignees = [user['login'] for user in resp['assignees']]
+
           if dd['comment']['body'].startswith('/take'):
-            data = json.dumps({"assignees": [dd['comment']['user']['login']]})
-            resp = requests.patch(dd['comment']['issue_url'], 
+            current_assignes.append(dd['comment']['user']['login'])
+            data = json.dumps({"assignees": current_assignees})
+            resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
             resp.raise_for_status()
 
           if dd['comment']['body'].startswith('/assign'):
-            assignees = dd['comment']['body'].split(' ')[1:]
+            current_assignees.extend([user.replace('@', '') for user in dd['comment']['body'].split(' ')[1:]])
             data = json.dumps({"assignees": assignees})
-            print(data)
-            resp = requests.patch(dd['comment']['issue_url'], 
+            resp = requests.post(dd['comment']['issue_url'], 
+                          headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
+                          data=data)
+            resp.raise_for_status()
+
+          if dd['comment']['body'].startswith('/unassign'):
+            for user in [user.replace('@', '') for user in dd['comment']['body'].split(' ')[1:]]:
+              if user in current_assignees:
+                current_assignees.drop(user)
+            data = json.dumps({"assignees": assignees})
+            resp = requests.post(dd['comment']['issue_url'], 
                           headers={'Authorization': f'Bearer {os.environ["GITHUB_TOKEN"]}'},
                           data=data)
             resp.raise_for_status()
