@@ -8,7 +8,7 @@ export async function run(): Promise<void> {
 
     console.log(eventFile.comment.issue_url);
     console.log(eventFile.comment.body);
-    console.log(eventFile.user.login);
+    console.log(eventFile.comment.user.login);
 
     // Set outputs for other workflow steps to use
     core.setOutput("time", new Date().toTimeString());

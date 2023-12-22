@@ -2763,7 +2763,7 @@ async function run() {
         let eventFile = JSON.parse(fs_1.default.readFileSync(GITHUB_EVENT_PATH, "utf-8"));
         console.log(eventFile.comment.issue_url);
         console.log(eventFile.comment.body);
-        console.log(eventFile.user.login);
+        console.log(eventFile.comment.user.login);
         // Set outputs for other workflow steps to use
         core.setOutput("time", new Date().toTimeString());
     }
