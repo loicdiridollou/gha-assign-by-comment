@@ -2766,13 +2766,13 @@ async function run() {
         let currentAssignees = await getAssignees(eventFile.comment.issue_url);
         if (body.startsWith("/take")) {
             let user = eventFile.comment.user.login;
-            if (currentAssignees.includes(user)) {
+            if (!currentAssignees.includes(user)) {
                 newAssignees.push(user.replace("@", ""));
             }
         }
         else if (body.startsWith("/assign")) {
             for (let user of body.split(" ").slice(1)) {
-                if (currentAssignees.includes(user)) {
+                if (!currentAssignees.includes(user)) {
                     newAssignees.push(user.replace("@", ""));
                 }
             }
@@ -2805,7 +2805,6 @@ async function getAssignees(issueUrl) {
         },
     });
     actualResp = await actual.json();
-    console.log(actualResp);
     let currentAssignees = [];
     for (let el of actualResp.assignees) {
         currentAssignees.push(el.login);
