@@ -2780,7 +2780,7 @@ async function getAssignees(issueUrl) {
     const actual = await fetch(issueUrl, {
         method: "GET",
         headers: {
-            Authorization: "Bearer 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",
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
     });
     actualResp = await actual.json();

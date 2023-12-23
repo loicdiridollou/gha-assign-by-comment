@@ -33,7 +33,8 @@ async function run() {
     try {
         const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
         let eventFile = JSON.parse(fs_1.default.readFileSync(GITHUB_EVENT_PATH, "utf-8"));
-        console.log(eventFile.comment.issue_url);
+        let currentAssignees = getAssignees(eventFile.comment.issue_url);
+        console.log(currentAssignees);
         console.log(eventFile.comment.body);
         console.log(eventFile.comment.user.login);
         // Set outputs for other workflow steps to use
@@ -46,4 +47,20 @@ async function run() {
     }
 }
 exports.run = run;
+async function getAssignees(issueUrl) {
+    let actualResp;
+    const actual = await fetch(issueUrl, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        },
+    });
+    actualResp = await actual.json();
+    console.log(actualResp);
+    let currentAssignees = [];
+    for (let el of actualResp.assignees) {
+        currentAssignees.push(el.login);
+    }
+    return currentAssignees;
+}
 //# sourceMappingURL=main.js.map
