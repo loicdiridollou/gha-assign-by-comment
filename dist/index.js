@@ -2761,7 +2761,8 @@ async function run() {
     try {
         const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
         let eventFile = JSON.parse(fs_1.default.readFileSync(GITHUB_EVENT_PATH, "utf-8"));
-        console.log(eventFile.comment.issue_url);
+        let currentAssignees = getAssignees(eventFile.comment.issue_url);
+        console.log(currentAssignees);
         console.log(eventFile.comment.body);
         console.log(eventFile.comment.user.login);
         // Set outputs for other workflow steps to use
@@ -2774,6 +2775,21 @@ async function run() {
     }
 }
 exports.run = run;
+async function getAssignees(issueUrl) {
+    let actualResp;
+    const actual = await fetch(issueUrl, {
+        method: "GET",
+        headers: {
+            Authorization: "Bearer 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",
+        },
+    });
+    actualResp = await actual.json();
+    let currentAssignees = [];
+    for (let el of actualResp.assignees) {
+        currentAssignees.push(el.login);
+    }
+    return currentAssignees;
+}
 
 
 /***/ }),
@@ -2915,7 +2931,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
  * The entrypoint for the action.
  */
 const main_1 = __nccwpck_require__(399);
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (0, main_1.run)();
 
 })();

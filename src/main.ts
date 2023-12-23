@@ -6,7 +6,8 @@ export async function run(): Promise<void> {
     const GITHUB_EVENT_PATH = process.env.GITHUB_EVENT_PATH;
     let eventFile = JSON.parse(fs.readFileSync(GITHUB_EVENT_PATH!, "utf-8"));
 
-    console.log(eventFile.comment.issue_url);
+    let currentAssignees = getAssignees(eventFile.comment.issue_url);
+    console.log(currentAssignees);
     console.log(eventFile.comment.body);
     console.log(eventFile.comment.user.login);
 
@@ -16,4 +17,21 @@ export async function run(): Promise<void> {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message);
   }
+}
+
+async function getAssignees(issueUrl: string): Promise<string[]> {
+  let actualResp;
+  const actual = await fetch(issueUrl, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer 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",
+    },
+  });
+  actualResp = await actual.json();
+  let currentAssignees: string[] = [];
+  for (let el of actualResp.assignees) {
+    currentAssignees.push(el.login);
+  }
+
+  return currentAssignees;
 }
