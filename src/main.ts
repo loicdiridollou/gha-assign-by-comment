@@ -28,6 +28,7 @@ async function getAssignees(issueUrl: string): Promise<string[]> {
     },
   });
   actualResp = await actual.json();
+  console.log(actualResp);
   let currentAssignees: string[] = [];
   for (let el of actualResp.assignees) {
     currentAssignees.push(el.login);

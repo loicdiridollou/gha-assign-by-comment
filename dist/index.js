@@ -2784,6 +2784,7 @@ async function getAssignees(issueUrl) {
         },
     });
     actualResp = await actual.json();
+    console.log(actualResp);
     let currentAssignees = [];
     for (let el of actualResp.assignees) {
         currentAssignees.push(el.login);
