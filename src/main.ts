@@ -7,19 +7,20 @@ export async function run(): Promise<void> {
     let eventFile = JSON.parse(fs.readFileSync(GITHUB_EVENT_PATH!, "utf-8"));
 
     let body: string = eventFile.comment.body;
-    let newAssignees: string[] = [];
+    let assignees: string[] = [];
     let commands = ["/take", "/assign", "/unassign"];
     if (commands.some((str) => body.startsWith(str))) {
       let currentAssignees = await getAssignees(eventFile.comment.issue_url);
+      assignees = [...currentAssignees];
       if (body.startsWith("/take")) {
         let user = eventFile.comment.user.login;
         if (!currentAssignees.includes(user)) {
-          newAssignees.push(user.replace("@", ""));
+          assignees.push(user.replace("@", ""));
         }
       } else if (body.startsWith("/assign")) {
         for (let user of body.split(" ").slice(1)) {
           if (!currentAssignees.includes(user)) {
-            newAssignees.push(user.replace("@", ""));
+            assignees.push(user.replace("@", ""));
           }
         }
       } else if (body.startsWith("/unassign")) {
@@ -28,15 +29,13 @@ export async function run(): Promise<void> {
             currentAssignees.indexOf(user.replace("@", "")),
           );
         }
-        newAssignees = currentAssignees;
+        assignees = currentAssignees;
       }
     }
 
-    if (newAssignees) {
-      console.log(newAssignees);
-      console.log(
-        await setAssignees(eventFile.comment.issue_url, newAssignees),
-      );
+    if (assignees) {
+      console.log(assignees);
+      console.log(await setAssignees(eventFile.comment.issue_url, assignees));
     }
 
     // Set outputs for other workflow steps to use
