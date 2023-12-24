@@ -67,7 +67,7 @@ async function getAssignees(issueUrl: string): Promise<string[]> {
 async function setAssignees(
   issueUrl: string,
   newAssignees: string[],
-): Promise<string[]> {
+): Promise<number> {
   let actualResp;
   const actual = await fetch(issueUrl, {
     method: "POST",
@@ -76,11 +76,6 @@ async function setAssignees(
     },
     body: JSON.stringify({ assignees: newAssignees }),
   });
-  actualResp = await actual.json();
-  let currentAssignees: string[] = [];
-  for (let el of actualResp.assignees) {
-    currentAssignees.push(el.login);
-  }
 
-  return currentAssignees;
+  return actual.status;
 }

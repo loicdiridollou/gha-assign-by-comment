@@ -2824,12 +2824,7 @@ async function setAssignees(issueUrl, newAssignees) {
         },
         body: JSON.stringify({ assignees: newAssignees }),
     });
-    actualResp = await actual.json();
-    let currentAssignees = [];
-    for (let el of actualResp.assignees) {
-        currentAssignees.push(el.login);
-    }
-    return currentAssignees;
+    return actual.status;
 }
 
 
