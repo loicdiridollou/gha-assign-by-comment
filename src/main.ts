@@ -72,7 +72,7 @@ async function setAssignees(
   console.log(data);
   console.log(issueUrl);
   const actual = await fetch(issueUrl, {
-    method: "POST",
+    method: "PATCH",
     headers: {
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
     },

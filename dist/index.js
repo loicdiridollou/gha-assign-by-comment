@@ -2820,7 +2820,7 @@ async function setAssignees(issueUrl, newAssignees) {
     console.log(data);
     console.log(issueUrl);
     const actual = await fetch(issueUrl, {
-        method: "POST",
+        method: "PATCH",
         headers: {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
