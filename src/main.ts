@@ -34,12 +34,11 @@ export async function run(): Promise<void> {
     }
 
     if (assignees) {
-      console.log(assignees);
       console.log(await setAssignees(eventFile.comment.issue_url, assignees));
     }
 
     // Set outputs for other workflow steps to use
-    core.setOutput("time", new Date().toTimeString());
+    core.setOutput("time", `${assignees}`);
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message);
@@ -66,10 +65,8 @@ async function getAssignees(issueUrl: string): Promise<string[]> {
 async function setAssignees(
   issueUrl: string,
   newAssignees: string[],
-): Promise<string> {
+): Promise<number> {
   let data = JSON.stringify({ assignees: newAssignees });
-  console.log(data);
-  console.log(issueUrl);
   const actual = await fetch(issueUrl, {
     method: "POST",
     headers: {
@@ -77,7 +74,6 @@ async function setAssignees(
     },
     body: data,
   });
-  console.log(await actual.json());
 
-  return "1";
+  return actual.status;
 }
