@@ -2816,7 +2816,6 @@ async function getAssignees(issueUrl) {
     return currentAssignees;
 }
 async function setAssignees(issueUrl, newAssignees) {
-    let actualResp;
     const actual = await fetch(issueUrl, {
         method: "POST",
         headers: {
@@ -2824,7 +2823,8 @@ async function setAssignees(issueUrl, newAssignees) {
         },
         body: JSON.stringify({ assignees: newAssignees }),
     });
-    return actual.status;
+    console.log(await actual.json());
+    return "1";
 }
 
 
