@@ -67,8 +67,7 @@ async function getAssignees(issueUrl: string): Promise<string[]> {
 async function setAssignees(
   issueUrl: string,
   newAssignees: string[],
-): Promise<number> {
-  let actualResp;
+): Promise<string> {
   const actual = await fetch(issueUrl, {
     method: "POST",
     headers: {
@@ -76,6 +75,7 @@ async function setAssignees(
     },
     body: JSON.stringify({ assignees: newAssignees }),
   });
+  console.log(await actual.json());
 
-  return actual.status;
+  return "1";
 }
