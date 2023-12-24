@@ -2763,28 +2763,32 @@ async function run() {
         let eventFile = JSON.parse(fs_1.default.readFileSync(GITHUB_EVENT_PATH, "utf-8"));
         let body = eventFile.comment.body;
         let newAssignees = [];
-        let currentAssignees = await getAssignees(eventFile.comment.issue_url);
-        if (body.startsWith("/take")) {
-            let user = eventFile.comment.user.login;
-            if (!currentAssignees.includes(user)) {
-                newAssignees.push(user.replace("@", ""));
-            }
-        }
-        else if (body.startsWith("/assign")) {
-            for (let user of body.split(" ").slice(1)) {
+        let commands = ["/take", "/assign", "/unassign"];
+        if (commands.some((str) => body.startsWith(str))) {
+            let currentAssignees = await getAssignees(eventFile.comment.issue_url);
+            if (body.startsWith("/take")) {
+                let user = eventFile.comment.user.login;
                 if (!currentAssignees.includes(user)) {
                     newAssignees.push(user.replace("@", ""));
                 }
             }
-        }
-        else if (body.startsWith("/unassign")) {
-            for (let user of body.split(" ").slice(1)) {
-                currentAssignees.splice(currentAssignees.indexOf(user.replace("@", "")));
+            else if (body.startsWith("/assign")) {
+                for (let user of body.split(" ").slice(1)) {
+                    if (!currentAssignees.includes(user)) {
+                        newAssignees.push(user.replace("@", ""));
+                    }
+                }
             }
-            newAssignees = currentAssignees;
+            else if (body.startsWith("/unassign")) {
+                for (let user of body.split(" ").slice(1)) {
+                    currentAssignees.splice(currentAssignees.indexOf(user.replace("@", "")));
+                }
+                newAssignees = currentAssignees;
+            }
         }
         if (newAssignees) {
             console.log(newAssignees);
+            console.log(await setAssignees(eventFile.comment.issue_url, newAssignees));
         }
         // Set outputs for other workflow steps to use
         core.setOutput("time", new Date().toTimeString());
@@ -2803,6 +2807,22 @@ async function getAssignees(issueUrl) {
         headers: {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
         },
+    });
+    actualResp = await actual.json();
+    let currentAssignees = [];
+    for (let el of actualResp.assignees) {
+        currentAssignees.push(el.login);
+    }
+    return currentAssignees;
+}
+async function setAssignees(issueUrl, newAssignees) {
+    let actualResp;
+    const actual = await fetch(issueUrl, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        },
+        body: JSON.stringify({ assignees: newAssignees }),
     });
     actualResp = await actual.json();
     let currentAssignees = [];

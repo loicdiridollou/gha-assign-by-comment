@@ -34,6 +34,9 @@ export async function run(): Promise<void> {
 
     if (newAssignees) {
       console.log(newAssignees);
+      console.log(
+        await setAssignees(eventFile.comment.issue_url, newAssignees),
+      );
     }
 
     // Set outputs for other workflow steps to use
@@ -51,6 +54,27 @@ async function getAssignees(issueUrl: string): Promise<string[]> {
     headers: {
       Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
     },
+  });
+  actualResp = await actual.json();
+  let currentAssignees: string[] = [];
+  for (let el of actualResp.assignees) {
+    currentAssignees.push(el.login);
+  }
+
+  return currentAssignees;
+}
+
+async function setAssignees(
+  issueUrl: string,
+  newAssignees: string[],
+): Promise<string[]> {
+  let actualResp;
+  const actual = await fetch(issueUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    },
+    body: JSON.stringify({ assignees: newAssignees }),
   });
   actualResp = await actual.json();
   let currentAssignees: string[] = [];
