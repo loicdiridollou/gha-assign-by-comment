@@ -2819,7 +2819,7 @@ async function setAssignees(issueUrl, newAssignees) {
     let data = JSON.stringify({ assignees: newAssignees });
     console.log(data);
     console.log(issueUrl);
-    const actual = await fetch(issueUrl + "/assignees", {
+    const actual = await fetch(issueUrl, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
