@@ -2791,7 +2791,6 @@ async function run() {
             console.log(await setAssignees(eventFile.comment.issue_url, assignees));
         }
         // Set outputs for other workflow steps to use
-        core.setOutput("time", `${assignees}`);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
