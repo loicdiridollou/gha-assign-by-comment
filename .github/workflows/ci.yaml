@@ -1,10 +1,10 @@
 name: Assign reviewer by comment
 on: [pull_request]
 
-permissions: checks:write
 
 jobs:
   assign_review_by_comment:
+    permissions: checks:write
     runs-on: ubuntu-latest
     steps:
       - name: Create Check Run
