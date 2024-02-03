@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   assign_review_by_comment:
     permissions: 
-      checks:write
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: Create Check Run
